@@ -10,10 +10,10 @@ from odoo.models import Model
 import odoo.addons.decimal_precision as dp
 
 
-class ProductProduct(Model):
-    _inherit = 'product.product'
+class ProductTemplate(Model):
+    _inherit = 'product.template'
 
-    @api.depends('product_tmpl_id.standard_price', 'standard_price')
+    @api.depends('product_variant_ids.standard_price', 'standard_price')
     def _compute_replenishment_cost(self):
         for product in self:
             product.replenishment_cost = product.standard_price
