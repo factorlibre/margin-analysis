@@ -54,6 +54,11 @@ Known issues / Roadmap
 * This module will not work properly if used in a multicompany context with product
   prices depending on the company.
 
+* You may not want to install this module if you have a large product catalog because
+  it will take a lot of time just to calculate the fields initial values. If thats
+  the case and you still want to install it you could create the fields in the database
+  to be able to finish the installation and compute their value after with a script.
+
 * It should be great to use the odoo widget ``percentpie`` for the display of the
   field ``standard_margin_rate`` but for the time being, the field is not displayed
   properly.
