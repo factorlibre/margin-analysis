@@ -51,9 +51,15 @@ class ProductTemplate(models.Model):
         # because otherwise, the recomputation is not done correctly
         # when the product datas are changed from the template view
         for template in self:
-            template.list_price_vat_excl = template.taxes_id.compute_all(
+            tax_include = self.env['ir.config_parameter'].sudo().get_param(
+                'product_standard_margin.argin_tax')
+            total_taxes = template.taxes_id.compute_all(
                 template.list_price, product=template
-            )["total_excluded"]
+            )
+            if tax_include == 'exclude':
+                template.list_price_vat_excl = total_taxes['base']
+            else:
+                template.list_price_vat_excl = total_taxes['total_exclude']
             template.standard_margin = (
                 template.list_price_vat_excl - template.standard_price
             )
