@@ -86,3 +86,18 @@ msgstr "Precio de Venta sin impuestos"
 #: model:product.template,name:product_standard_margin.product_wine_product_template
 msgid "Wine"
 msgstr ""
+
+#. module: product_standard_margin
+#: model:ir.model.fields,field_description:product_standard_margin.field_res_config_settings_margin_tax
+msgid "Tax in product margin"
+msgstr "Impuestos en el margen"
+
+#. module: product_standard_margin
+#: selection:res.config.settings,margin_tax:0
+msgid "Exclude"
+msgstr "Excluido"
+
+#. module: product_standard_margin
+#: selection:res.config.settings,margin_tax:0
+msgid "Include"
+msgstr "Incluido"
