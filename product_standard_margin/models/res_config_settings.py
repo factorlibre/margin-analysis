@@ -9,7 +9,8 @@ class ResConfigSettings(models.TransientModel):
     margin_tax = fields.Selection(
         string="Tax in product margin",
         selection=[("include", "Include"), ("exclude", "Exclude")],
-        readonly=True,
+        default="exclude",
+        required=True,
     )
 
     @api.model
@@ -17,7 +18,7 @@ class ResConfigSettings(models.TransientModel):
         res = super(ResConfigSettings, self).get_values()
         ir_config_sudo = self.env['ir.config_parameter'].sudo()
         margin_tax = ir_config_sudo.get_param(
-            'product_standard_margin.margin_tax', False)
+            'product_standard_margin.margin_tax',  default="exclude")
         res.update(margin_tax=margin_tax)
         return res
 
@@ -27,5 +28,5 @@ class ResConfigSettings(models.TransientModel):
         ir_config_sudo = self.env['ir.config_parameter'].sudo()
         ir_config_sudo.set_param(
             'product_standard_margin.margin_tax',
-            self.margin_tax
+            self.margin_tax,
         )

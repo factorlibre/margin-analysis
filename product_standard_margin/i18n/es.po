@@ -101,3 +101,13 @@ msgstr "Excluido"
 #: selection:res.config.settings,margin_tax:0
 msgid "Include"
 msgstr "Incluido"
+
+#. module: product_standard_margin
+#: model:ir.ui.view,arch_db:product_standard_margin.res_config_settings_view_form
+msgid "Indicates if the taxes to calculate the margin are included or excluded"
+msgstr "Indica si los impuestos del producto son incluidos o excluidos al calcular el margen"
+
+#. module: product_standard_margin
+#: model:ir.ui.view,arch_db:product_standard_margin.res_config_settings_view_form
+msgid "Margin Tax"
+msgstr "Impuestos en el margen"
