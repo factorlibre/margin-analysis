@@ -52,9 +52,15 @@ class ProductProduct(models.Model):
     )
     def _compute_margin(self):
         for product in self:
-            product.list_price_vat_excl = product.taxes_id.compute_all(
-                product.lst_price, product=product
-            )["total_excluded"]
+            tax_include = self.env['ir.config_parameter'].sudo().get_param(
+                'product_standard_margin.argin_tax')
+            total_taxes = product.taxes_id.compute_all(
+                product.list_price, product=product
+            )
+            if tax_include == 'exclude':
+                product.list_price_vat_excl = total_taxes['base']
+            else:
+                product.list_price_vat_excl = total_taxes['total_excluded']
             product.standard_margin = (
                 product.list_price_vat_excl - product.standard_price
             )
