@@ -59,7 +59,7 @@ class ProductTemplate(models.Model):
             if tax_include == 'exclude':
                 template.list_price_vat_excl = total_taxes['base']
             else:
-                template.list_price_vat_excl = total_taxes['total_exclude']
+                template.list_price_vat_excl = total_taxes['total_excluded']
             template.standard_margin = (
                 template.list_price_vat_excl - template.standard_price
             )
