@@ -11,6 +11,15 @@ class TestModule(TransactionCase):
         super().setUp()
         self.ProductProduct = self.env['product.product']
         self.ProductTemplate = self.env['product.template']
+        self.product_template = self.ProductTemplate.create({
+            'name': 'Demo template',
+            'lst_price': 100,
+        })
+        self.product_product = self.ProductProduct.create({
+            'name': 'Demo template',
+            'product_tmpl_id': self.product_template.id,
+            'lst_price': 100,
+        })
 
     # Custom Section
     def _create_product(self, model, standard_price, sale_price, sale_tax_ids):
@@ -59,3 +68,97 @@ class TestModule(TransactionCase):
                 product.standard_margin_rate, 999.0,
                 "Incorrect Standard Margin Rate (without sale price)"
                 " for model %s" % model)
+
+    def test_04_include_tax_include(self):
+        tax = self.env["account.tax"].create(
+            {
+                "name": "impuesto 10 incluido",
+                "amount": 10,
+                "price_include": True,
+                "include_base_amount": True,
+            }
+        )
+        self.env['ir.config_parameter'].sudo().set_param(
+                'product_standard_margin.margin_tax', 'include')
+        self.product_template.write({
+            'taxes_id': [(6, 0, tax.ids)]
+        })
+        self.product_template.standard_price = 10
+        self.assertEqual(
+            self.product_template.standard_margin, 80.91)
+        self.product_product.write({
+            'taxes_id': [(6, 0, tax.ids)]
+        })
+        self.product_product.standard_price = 10
+        self.assertEqual(
+            self.product_product.standard_margin, 80.91)
+
+    def test_05_include_tax_exclude(self):
+        tax = self.env['account.tax'].create(
+            {'name': 'impuesto 10 excluido', 'amount': 10})
+        self.env['ir.config_parameter'].sudo().set_param(
+                'product_standard_margin.margin_tax', 'include')
+        self.product_template.write({
+            'taxes_id': [(6, 0, tax.ids)]
+        })
+        self.product_template.standard_price = 10
+        self.assertEqual(
+            self.product_template.standard_margin, 80.91)
+        self.product_product.write({
+            'taxes_id': [(6, 0, tax.ids)]
+        })
+        self.product_product.standard_price = 10
+        self.assertEqual(
+            self.product_product.standard_margin, 80.91)
+
+    def test_06_exclude_tax_exclude(self):
+        tax = self.env['account.tax'].create(
+            {'name': 'impuesto 10 excluido', 'amount': 10})
+        self.env['ir.config_parameter'].sudo().set_param(
+                'product_standard_margin.margin_tax', 'exclude')
+        self.product_template.write({
+            'taxes_id': [(6, 0, tax.ids)]
+        })
+        self.product_template.write({
+            'standard_price': 10
+        })
+        self.product_template.standard_price = 10
+        self.assertEqual(
+            self.product_template.standard_margin, 90)
+        self.product_product.write({
+            'taxes_id': [(6, 0, tax.ids)]
+        })
+        self.product_product.standard_price = 10
+        self.assertEqual(
+            self.product_product.standard_price, 10)
+        self.assertEqual(
+            self.product_product.standard_margin, 90)
+
+    def test_07_exclude_tax_include(self):
+        tax = self.env["account.tax"].create(
+            {
+                "name": "impuesto 10 incluido",
+                "amount": 10,
+                "price_include": True,
+                "include_base_amount": True,
+            }
+        )
+        self.env['ir.config_parameter'].sudo().set_param(
+                'product_standard_margin.margin_tax', 'exclude')
+        self.product_template.write({
+            'taxes_id': [(6, 0, tax.ids)]
+        })
+        self.product_template.write({
+            'standard_price': 10
+        })
+        self.product_template.standard_price = 10
+        self.assertEqual(
+            self.product_template.standard_margin, 90)
+        self.product_product.write({
+            'taxes_id': [(6, 0, tax.ids)]
+        })
+        self.product_product.standard_price = 10
+        self.assertEqual(
+            self.product_product.standard_price, 10)
+        self.assertEqual(
+            self.product_product.standard_margin, 90)
