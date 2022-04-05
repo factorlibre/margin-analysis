@@ -8,7 +8,7 @@
     "version": "11.0.1.0.0",
     "author": "Camptocamp,GRAP,Odoo Community Association (OCA)",
     "category": "Product",
-    "depends": ["account"],
+    "depends": ["account", "sale"],
     "maintainers": ["legalsylvain"],
     "website": "https://www.github.com/OCA/margin-analysis",
     "data": [
