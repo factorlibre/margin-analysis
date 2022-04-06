@@ -162,3 +162,16 @@ class TestModule(TransactionCase):
             self.product_product.standard_price, 10)
         self.assertEqual(
             self.product_product.standard_margin, 90)
+        tax.include_base_amount = False
+        self.product_template._compute_margin()
+        self.product_product._compute_margin()
+        self.product_template.standard_price = 10
+        self.assertEqual(
+            self.product_template.standard_price, 10)
+        self.assertEqual(
+            self.product_template.standard_margin, 90)
+        self.product_product.standard_price = 10
+        self.assertEqual(
+            self.product_product.standard_price, 10)
+        self.assertEqual(
+            self.product_product.standard_margin, 90)

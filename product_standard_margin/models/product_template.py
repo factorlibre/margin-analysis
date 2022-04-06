@@ -57,7 +57,14 @@ class ProductTemplate(models.Model):
                 template.list_price, product=template
             )
             if tax_include == 'exclude':
-                template.list_price_vat_excl = total_taxes['base']
+                price_included = 0
+                for tax in total_taxes.get('taxes'):
+                    tax_id = self.env['account.tax'].search(
+                            [('id', '=', tax.get('id'))])
+                    if tax.get('price_include') and not tax_id.include_base_amount:
+                        price_included += tax.get('amount')
+                template.list_price_vat_excl = (total_taxes['base']
+                                                + price_included)
             else:
                 price_included = 0
                 for tax in total_taxes.get('taxes'):
